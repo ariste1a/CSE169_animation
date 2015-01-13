@@ -12,7 +12,7 @@ Skeleton.prototype.tokenizer = new Tokenizer();
 Skeleton.prototype.root = new Joint(); 
 Skeleton.prototype.load = function() {  
     this.root = new Joint();
-    this.tokenizer.findToken("balljoint"); 
+    this.tokenizer.findToken("balljoint");
     this.root.load(this.tokenizer);
     //call recurisve load on joint
 } 
@@ -37,18 +37,10 @@ Skeleton.prototype.open =  function (evt) {
     var file = files[0]; 
 
     var reader = new FileReader();
-    // Closure to capture the file information.        
-    //how to relay this to when it finishes loading?
-  /*  reader.onload = (function(theFile) {
-        return function(e) {
-            var text = e.target.result; 
-        };
-    })(this.file);*/     
+    // Closure to capture the file information. 
     reader.onload = function(e) { 
         this.text = e.target.result; 
         Skeleton.prototype.text = this.text;
-        //console.log(Skeleton.prototype.text);
-        //start recursion?
         Skeleton.prototype.tokenizer.tokens = this.text.split(/\s+/);
         Skeleton.prototype.load(Skeleton.prototype.text); 
     }

@@ -11,67 +11,70 @@ Joint.prototype.rotzlimit = new DOF();
 Joint.prototype.pose = new THREE.Vector3();
 Joint.prototype.children = []; 
 
-Joint.prototype.load = function(tokenizer){
-    console.log(tokenizer.tokens);
+Joint.prototype.load = function(tokenizer){    
     var name = tokenizer.getToken();    
     console.log(name); 
-    //tokenizer.findToken("{");
-	while (1) {		
+    tokenizer.findToken("{");
+	while (1) {
 		var tok = tokenizer.getToken();
 		if (tok == "offset") {						
             this.offset.setX(tokenizer.getToken()); 
             this.offset.setY(tokenizer.getToken()); 
             this.offset.setZ(tokenizer.getToken()); 
             console.log(this.offset); 
-		}				
-        /*
+		}				        
 		if (tok == "boxmin") {
-			boxmin[0] = tokenizer.getToken();
-			boxmin[1] = tokenizer.getToken();
-			boxmin[2] = tokenizer.getToken();
+			this.boxmin.setX(tokenizer.getToken()); 
+            this.boxmin.setY(tokenizer.getToken()); 
+            this.boxmin.setZ(tokenizer.getToken()); 
+            console.log(this.boxmin); 
 		}
 		if (tok == "boxmax") {
-			boxmax[0] = tokenizer.getToken();
-			boxmax[1] = tokenizer.getToken();
-			boxmax[2] = tokenizer.getToken();
+			this.boxmax.setX(tokenizer.getToken()); 
+            this.boxmax.setY(tokenizer.getToken()); 
+            this.boxmax.setZ(tokenizer.getToken()); 
+            console.log(this.boxmax); 
 		}
 		if (tok == "rotxlimit") {
-			float min = tokenizer.getToken(); 
-			float max = tokenizer.getToken(); 			
-			rotxlimit.setMinMax(min, max);
+			var min = tokenizer.getToken(); 
+			var max = tokenizer.getToken(); 			
+			this.rotxlimit.setMinMax(min, max);
+            console.log(this.rotxlimit); 
 		}
 		if (tok == "rotylimit") {
-			//rotylimit.setMinMax(tokenizer.GetFloat(), tokenizer.GetFloat());
-			float min = tokenizer.GetFloat();
-			float max = tokenizer.GetFloat();
-			rotylimit.setMinMax(min, max);
+			var min = tokenizer.getToken(); 
+			var max = tokenizer.getToken(); 			
+			this.rotylimit.setMinMax(min, max);
+            console.log(this.rotylimit); 
 		}
-		if (tok == "rotylimit") == 0) {
-			//rotzlimit.setMinMax(tokenizer.GetFloat(), tokenizer.GetFloat());
-			float min = tokenizer.GetFloat();
-			float max = tokenizer.GetFloat();
-			rotzlimit.setMinMax(min, max);
-		}
-		//degrees for each axis right?
+		if (tok == "rotzlimit") {			
+			var min = tokenizer.getToken(); 
+			var max = tokenizer.getToken(); 
+			this.rotzlimit.setMinMax(min, max);
+            console.log(this.rotzlimit); 
+		}		
 		if (tok == "pose") {
-			pose[0] = tokenizer.GetFloat(); 
-			pose[1] = tokenizer.GetFloat();
-			pose[2] = tokenizer.GetFloat();
+			this.pose.setX(tokenizer.getToken()); 
+            this.pose.setY(tokenizer.getToken()); 
+            this.pose.setZ(tokenizer.getToken()); 
+            console.log(this.pose); 
 		}
 		if (tok == "balljoint") {
-					joint *jnt = new joint;					
-					jnt->load(tokenizer);
-					addChild(jnt);
-					jnt->setParent(this); 
-		}*/ 
+            var jnt = new Joint();
+            console.log("recursive call"); 
+            jnt.load(tokenizer);             
+            this.addChild(jnt);
+            jnt.parent = this; 
+		}
 		if (tok == "}")
 		{
-
 			return true;
 		}
 		else 
-			tokenizer.getToken(); // Unrecognized token
+			;//tokenizer.getToken(); // Unrecognized token
     }
 }
-
-
+    
+Joint.prototype.addChild = function(child){
+    this.children.push(child); 
+}
