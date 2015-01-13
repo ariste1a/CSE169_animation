@@ -11,10 +11,10 @@
         <output id="list"></output>
         <script src="js/jquery-1.11.2.min.js"></script>
 		<script src="js/three.min.js"></script>
+        <script src="js/DOF.js"></script>         
         <script src="js/Tokenizer.js"></script>
-        <script src="js/Skeleton.js"></script>
-        <script src="js/Joint.js"></script>
-        <script src="js/DOF.js"></script>        
+        <script src="js/Joint.js"></script>   
+        <script src="js/Skeleton.js"></script>                    
 		<script>
 			// Our Javascript will go here.            
             var scene = new THREE.Scene();
@@ -35,7 +35,7 @@
                 renderer.render( scene, camera );
             }
             render();
-            var skel = new Skeleton();                         
+            var skel = new Skeleton();                            
             document.getElementById('files').addEventListener('change', skel.open, false);
 		</script>        
         <div id="stuff"> </div>

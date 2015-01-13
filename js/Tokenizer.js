@@ -5,28 +5,14 @@ var Tokenizer = function() {
     this.files; 
     this.file; 
 } 
-
-Tokenizer.prototype.tokenize = function() { 
-    return true; 
+Tokenizer.prototype.currIndex = 0; 
+Tokenizer.prototype.getToken = function() { 
+    var ret = this.tokens[this.currIndex]; 
+    this.currIndex++; 
+    return ret;     
 } 
 
-Tokenizer.prototype.open =  function (evt) { 
-    var files = evt.target.files; // FileList object
-
-    // Loop through the FileList and render image files as thumbnails.
-    var file = files[0]; 
-
-    var reader = new FileReader();
-    // Closure to capture the file information.
-    console.log("test");
+Tokenizer.prototype.findToken = function(char){
+    var index = this.tokens.indexOf(char)
     
-    //how to relay this to when it finishes loading?
-    reader.onload = (function(theFile, recursiveLoad) {
-        return function(e) {
-            var text = e.target.result; 
-            this.text = text;
-            //console.log(this.text);
-        };
-    })(this.file);
-    reader.readAsText(file);    
-} 
+}

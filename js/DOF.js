@@ -1,4 +1,3 @@
-var DOF = function() {}; 
 var DOF = function() {
     DOF.prototype.value = 0; 
     DOF.prototype.value.min  = -999999; 

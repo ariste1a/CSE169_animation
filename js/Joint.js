@@ -1,18 +1,22 @@
 var Joint = function(){
-    this.localMatrix = new THREE.Matrix4(); 
-    this.worldMatrix = new THREE.Matrix4(); 
-    this.parent = 0; 
-    this.offset = new THREE.Vector3(); 
-    this.boxmin = new THREE.Vector3(); 
-    this.boxmax = new THREE.Vector3(); 
-    this.rotxlimit = new DOF(); 
-    this.rotylimit = new DOF(); 
-    this.rotzlimit = new DOF(); 
-    this.pose = new THREE.Vector3();
-    this.children = []; 
+    
 }
+Joint.prototype.localMatrix = new THREE.Matrix4(); 
+Joint.prototype.worldMatrix = new THREE.Matrix4(); 
+Joint.prototype.parent = 0; 
+Joint.prototype.offset = new THREE.Vector3(); 
+Joint.prototype.boxmin = new THREE.Vector3(); 
+Joint.prototype.boxmax = new THREE.Vector3(); 
+Joint.prototype.rotxlimit = new DOF(); 
+Joint.prototype.rotylimit = new DOF(); 
+Joint.prototype.rotzlimit = new DOF(); 
+Joint.prototype.pose = new THREE.Vector3();
+Joint.prototype.children = []; 
 
 Joint.prototype.load = function(tokenizer){
-    console.log("do stuff"); 
+    console.log(tokenizer.tokens);
+    var name = tokenizer.getToken();
+    name = tokenizer.getToken();
+    console.log(name); 
 }
 
