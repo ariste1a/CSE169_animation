@@ -12,7 +12,7 @@ Skeleton.prototype.tokenizer = new Tokenizer();
 Skeleton.prototype.root = new Joint(); 
 Skeleton.prototype.load = function() {  
     this.root = new Joint();
-    this.tokenizer.getToken(); 
+    this.tokenizer.findToken("balljoint"); 
     this.root.load(this.tokenizer);
     //call recurisve load on joint
 } 
