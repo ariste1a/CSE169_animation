@@ -7,9 +7,16 @@
 		</style>
 	</head>
 	<body>
+        <input type="file" id="files" name="files[]" multiple />
+        <output id="list"></output>
+        <script src="js/jquery-1.11.2.min.js"></script>
 		<script src="js/three.min.js"></script>
+        <script src="js/Tokenizer.js"></script>
+        <script src="js/Skeleton.js"></script>
+        <script src="js/Joint.js"></script>
+        <script src="js/DOF.js"></script>        
 		<script>
-			// Our Javascript will go here.
+			// Our Javascript will go here.            
             var scene = new THREE.Scene();
             var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
@@ -28,6 +35,9 @@
                 renderer.render( scene, camera );
             }
             render();
-		</script>
+            var skel = new Skeleton();                         
+            document.getElementById('files').addEventListener('change', skel.open, false);
+		</script>        
+        <div id="stuff"> </div>
 	</body>
 </html>
