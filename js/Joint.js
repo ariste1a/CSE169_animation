@@ -78,3 +78,17 @@ Joint.prototype.load = function(tokenizer){
 Joint.prototype.addChild = function(child){
     this.children.push(child); 
 }
+
+Joint.prototype.computeLocalMatrix() = function(){
+        var trans = new THREE.Matrix4();   
+        this.local.setPosition(this.offset);
+        return this.local;
+} 
+
+Joint.prototype.computeWorldMatrix = function(parentMtx){
+    this.local = this.computeLocalMatrix(); 
+    this.world.multiplyMatrices(parentMtx, this.local); 
+    for(var i = 0; i < this.children.length; i++){
+        this.children[i].computeWorldMatrix(this.world); 
+    }    
+}
