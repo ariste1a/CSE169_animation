@@ -1,4 +1,4 @@
-//should have a filereader object and a file object in here that is grabbed by the UI instead. 
+    //should have a filereader object and a file object in here that is grabbed by the UI instead. 
 
 var Skeleton = function() { 
     this.local = new THREE.Matrix4(); 
@@ -10,16 +10,24 @@ var Skeleton = function() {
 Skeleton.prototype.local = new THREE.Matrix4(); 
 Skeleton.prototype.tokenizer = new Tokenizer(); 
 Skeleton.prototype.root = new Joint(); 
-Skeleton.prototype.load = function() {  
+Skeleton.prototype.scene = new THREE.Scene(); 
+Skeleton.prototype.load = function(scene) {            
     this.root = new Joint();
     this.tokenizer.findToken("balljoint");
+    //call recurisve load on joints
+    this.root.name = this.tokenizer.getToken(); 
     this.root.load(this.tokenizer);
-    //call recurisve load on joint
+    console.log("finished loading: ", this.tokenizer.tokens);
+//    console.log(this.root.name); 
+    console.log(this.root.children);                                                                     
+   // this.root.printChildren(); 
+   // this.update();
+    //this.draw(this.scene);   //need to call init when loading is done. using a callback?                               
 } 
 
-Skeleton.prototype.update = function() { 
+Skeleton.prototype.update = function() {
     this.root.computeWorldMatrix(this.local); 
-} 
+}
 
 Skeleton.prototype.draw = function(scene) { 
     this.root.draw(scene); 

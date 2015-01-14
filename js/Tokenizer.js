@@ -14,6 +14,6 @@ Tokenizer.prototype.getToken = function() {
 
 Tokenizer.prototype.findToken = function(char){
     var index = this.tokens.indexOf(char, this.currIndex);    
-    this.currIndex = index+1;    
+    //this.currIndex = index+1;    
     return index;     
 }

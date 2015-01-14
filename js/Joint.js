@@ -10,10 +10,11 @@ Joint.prototype.rotylimit = new DOF();
 Joint.prototype.rotzlimit = new DOF(); 
 Joint.prototype.pose = new THREE.Vector3();
 Joint.prototype.children = []; 
+Joint.prototype.name = ""; 
 
 Joint.prototype.load = function(tokenizer){    
     var name = tokenizer.getToken();    
-    console.log(name); 
+    this.name = name; 
     tokenizer.findToken("{");
 	while (1) {
 		var tok = tokenizer.getToken();
@@ -60,18 +61,17 @@ Joint.prototype.load = function(tokenizer){
             console.log(this.pose); 
 		}
 		if (tok == "balljoint") {
-            var jnt = new Joint();
-            console.log("recursive call"); 
+            var jnt = new Joint();            
             jnt.load(tokenizer);             
             this.addChild(jnt);
-            jnt.parent = this; 
+            jnt.parent = this;       
 		}
 		if (tok == "}")
 		{
 			return true;
 		}
 		else 
-			;//tokenizer.getToken(); // Unrecognized token
+            ;//tokenizer.getToken(); // Unrecognized token
     }
 }
     
@@ -87,10 +87,10 @@ Joint.prototype.computeLocalMatrix = function(){
 
 Joint.prototype.computeWorldMatrix = function(parentMtx){
     this.localMatrix = this.computeLocalMatrix(); 
-    this.worldMatrix.multiplyMatrices(parentMtx, this.localMatrix); 
+    this.worldMatrix.multiplyMatrices(parentMtx, this.localMatrix);     
     for(var i = 0; i < this.children.length; i++){
-        this.children[i].computeWorldMatrix(this.worldMatrix); 
-    }    
+        this.children[i].computeWorldMatrix(this.worldMatrix);        
+    }
 }
 
 Joint.prototype.doPose = function(){
@@ -128,7 +128,7 @@ Joint.prototype.doPose = function(){
 }
 
 Joint.prototype.draw = function(scene) { 
-    this.drawWireBox(this.boxmin.x, this.boxmin.y, this.boxmin.z, this.boxmax.x, this.boxmax.y, this.boxmax.z, scene); 
+    this.drawWireBox(this.boxmin.x, this.boxmin.y, this.boxmin.z, this.boxmax.x, this.boxmax.y, this.boxmax.z, scene);
     for(var i = 0; i < this.children.length; i++){
         this.children[i].draw(scene); 
     }
@@ -136,7 +136,20 @@ Joint.prototype.draw = function(scene) {
 
 Joint.prototype.drawWireBox = function(xmin, ymin, zmin, xmax, ymax, zmax, scene){
     var geometry = new THREE.BoxGeometry( xmax-xmin,ymax-ymin,zmax-zmin);
-    var material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+    var material = new THREE.MeshBasicMaterial( { color: 'blue', wireframe: true     } );
     var mesh = new THREE.Mesh( geometry, material );
-    scene.add( mesh );
+    this.mesh = mesh; 
+    mesh.matrix = this.worldMatrix;
+    scene.add( mesh );    
+}
+
+
+//is the first object the root?
+Joint.prototype.printChildren = function(){
+    for(var i = 0; i< this.children.length; i++){
+        console.log(this.children[i].name); 
+        this.children[i].printChildren(); 
+    }
+    this.children
+    return;
 }

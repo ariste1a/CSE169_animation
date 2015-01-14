@@ -29,13 +29,8 @@
             //scene.add( cube );
             camera.position.z = 5;            
             var skel = new Skeleton();                            
-            document.getElementById('files').addEventListener('change', skel.open, false);
-            
-            function init () {
-                skel.update();
-                skel.draw(scene);             
-            }
-            init(); 
+            skel.scene = scene;        
+            document.getElementById('files').addEventListener('change', skel.open, false);                    
             
             function render() {            
                 requestAnimationFrame( render );
