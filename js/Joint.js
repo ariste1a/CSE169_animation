@@ -53,7 +53,7 @@ Joint.prototype.load = function(tokenizer){
 			this.rotzlimit.setMinMax(min, max);
             console.log(this.rotzlimit); 
 		}		
-		if (tok == "pose") {
+		if (tok == "pose") {            
 			this.pose.setX(tokenizer.getToken()); 
             this.pose.setY(tokenizer.getToken()); 
             this.pose.setZ(tokenizer.getToken()); 
@@ -79,16 +79,64 @@ Joint.prototype.addChild = function(child){
     this.children.push(child); 
 }
 
-Joint.prototype.computeLocalMatrix() = function(){
-        var trans = new THREE.Matrix4();   
-        this.local.setPosition(this.offset);
-        return this.local;
+Joint.prototype.computeLocalMatrix = function(){
+        var trans = new THREE.Matrix4();           
+        this.localMatrix.setPosition(this.offset);
+        return this.localMatrix;
 } 
 
 Joint.prototype.computeWorldMatrix = function(parentMtx){
-    this.local = this.computeLocalMatrix(); 
-    this.world.multiplyMatrices(parentMtx, this.local); 
+    this.localMatrix = this.computeLocalMatrix(); 
+    this.worldMatrix.multiplyMatrices(parentMtx, this.localMatrix); 
     for(var i = 0; i < this.children.length; i++){
-        this.children[i].computeWorldMatrix(this.world); 
+        this.children[i].computeWorldMatrix(this.worldMatrix); 
     }    
+}
+
+Joint.prototype.doPose = function(){
+    var rot = new THREE.Matrix4(); 
+    if (this.pose.x > this.rotxlimit.getMax())
+	{
+		this.pose.x = rotxlimit.getMax();
+	}
+	else if (this.pose.x < this.rotxlimit.getMin())
+	{
+
+		this.pose.x = rotxlimit.getMin();
+	}
+ 
+	if (this.pose.y > this.rotylimit.getMax())
+	{
+		this.pose.y = this.rotylimit.getMax();
+	}
+	else if (this.pose.y < this.rotylimit.getMin())
+	{
+		this.pose.y = this.rotylimit.getMin();
+	}
+
+	if (this.pose.z > this.rotzlimit.getMax())
+	{
+		this.pose.z = this.rotzlimit.getMax();
+	}
+	else if (this.pose.z < this.rotzlimit.getMin())
+	{
+		this.pose.z = this.rotzlimit.getMin();
+	}
+    var euler = new THEE.Euler(this.pose.x, this.pose.y, this.pose.z, 'XYZ');
+    rot.makeRotationFromEuler(euler); 
+    return rot; 
+}
+
+Joint.prototype.draw = function(scene) { 
+    this.drawWireBox(this.boxmin.x, this.boxmin.y, this.boxmin.z, this.boxmax.x, this.boxmax.y, this.boxmax.z, scene); 
+    for(var i = 0; i < this.children.length; i++){
+        this.children[i].draw(scene); 
+    }
+} 
+
+Joint.prototype.drawWireBox = function(xmin, ymin, zmin, xmax, ymax, zmax, scene){
+    var geometry = new THREE.BoxGeometry( xmax-xmin,ymax-ymin,zmax-zmin);
+    var material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+    var mesh = new THREE.Mesh( geometry, material );
+    scene.add( mesh );
 }

@@ -18,11 +18,11 @@ Skeleton.prototype.load = function() {
 } 
 
 Skeleton.prototype.update = function() { 
-    
+    this.root.computeWorldMatrix(this.local); 
 } 
 
-Skeleton.prototype.draw = function() { 
-    
+Skeleton.prototype.draw = function(scene) { 
+    this.root.draw(scene); 
 } 
 
 Skeleton.prototype.reset = function() { 
