@@ -30,9 +30,9 @@
             camera.position.z = 5;            
             var skel = new Skeleton();                            
             skel.setScene(scene);      
-            renderer.setClearColorHex(0x333F47,1);
-            var light = new THREE.PointLight(0xffffff);
-            light.position.set(-100,200,100);
+            renderer.setClearColorHex(0x0,1);
+            var light = new THREE.DirectionalLight(0xffffff, 1);
+            light.position.set(10, 10, 10);
             scene.add(light);
             controls = new THREE.OrbitControls(camera, renderer.domElement);            
             document.getElementById('files').addEventListener('change', skel.open, false);            

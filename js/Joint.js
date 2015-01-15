@@ -177,7 +177,8 @@ Joint.prototype.update = function(scene) {
 //problem is that it's not drawing it the correc way
 Joint.prototype.drawWireBox = function(xmin, ymin, zmin, xmax, ymax, zmax, scene){    
     var geometry = new THREE.BoxGeometry(xmax-xmin,ymax-ymin,zmax-zmin);
-    var material = new THREE.MeshBasicMaterial( { color: '0x00ff00', wireframe:true});
+    var material = new THREE.MeshBasicMaterial( { color: 'blue', wireframe:true, shading: THREE.FlatShading});
+    //var material = new THREE.MeshPhongMaterial({ ambient: 0x0, color: 'black', specular: 'white', shininess: 30, shading: THREE.FlatShading, wireframe:true} );
     var mesh = new THREE.Mesh( geometry, material );
     this.mesh = mesh; 
     
