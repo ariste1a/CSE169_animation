@@ -105,6 +105,7 @@ Joint.prototype.computeLocalMatrix = function(){
         var matrix = new THREE.Matrix4();        
         trans.multiply(matrix);
         //local.multiplyMatrices(trans, this.doPose());
+        trans.multiply(this.doPose()); 
         return trans;   
 } 
 
@@ -129,7 +130,7 @@ Joint.prototype.doPose = function(){
 	else if (this.pose.x < this.rotxlimit.getMin())
 	{
 
-		this.pose.x = rotxlimit.getMin();
+		this.pose.x = this.rotxlimit.getMin();
 	}
  
 	if (this.pose.y > this.rotylimit.getMax())
@@ -149,7 +150,7 @@ Joint.prototype.doPose = function(){
 	{
 		this.pose.z = this.rotzlimit.getMin();
 	}
-    var euler = new THREE.Euler(this.pose.x, this.pose.y, this.pose.z, 'ZXY');
+    var euler = new THREE.Euler(this.pose.x, this.pose.y, this.pose.z, 'ZYX');
     rot.makeRotationFromEuler(euler); 
     return rot; 
 }
