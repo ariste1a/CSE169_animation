@@ -31,51 +31,51 @@ Joint.prototype.load = function(tokenizer){
 		var tok = tokenizer.getToken();
 		if (tok == "offset") {	
             this.offset = new THREE.Vector3(); 
-            this.offset.setX(tokenizer.getToken()); 
-            this.offset.setY(tokenizer.getToken()); 
-            this.offset.setZ(tokenizer.getToken()); 
+            this.offset.setX(Number(tokenizer.getToken())); 
+            this.offset.setY(Number(tokenizer.getToken())); 
+            this.offset.setZ(Number(tokenizer.getToken())); 
             console.log(this.offset); 
 		}				        
 		if (tok == "boxmin") {
             this.boxmin = new THREE.Vector3(); 
-			this.boxmin.setX(tokenizer.getToken()); 
-            this.boxmin.setY(tokenizer.getToken()); 
-            this.boxmin.setZ(tokenizer.getToken()); 
+			this.boxmin.setX(Number(tokenizer.getToken())); 
+            this.boxmin.setY(Number(tokenizer.getToken())); 
+            this.boxmin.setZ(Number(tokenizer.getToken())); 
             console.log(this.boxmin); 
 		}
 		if (tok == "boxmax") {
             this.boxmax = new THREE.Vector3(); 
-			this.boxmax.setX(tokenizer.getToken()); 
-            this.boxmax.setY(tokenizer.getToken()); 
-            this.boxmax.setZ(tokenizer.getToken()); 
+			this.boxmax.setX(Number(tokenizer.getToken()));
+            this.boxmax.setY(Number(tokenizer.getToken())); 
+            this.boxmax.setZ(Number(tokenizer.getToken())); 
             console.log(this.boxmax); 
 		}
 		if (tok == "rotxlimit") {
             this.rotxlimit = new DOF(); 
-			var min = tokenizer.getToken(); 
-			var max = tokenizer.getToken(); 			
+			var min = Number(tokenizer.getToken()); 
+			var max = Number(tokenizer.getToken()); 			
 			this.rotxlimit.setMinMax(min, max);
             console.log(this.rotxlimit); 
 		}
 		if (tok == "rotylimit") {
             this.rotylimit = new DOF(); 
-			var min = tokenizer.getToken(); 
-			var max = tokenizer.getToken(); 			
+			var min = Number(tokenizer.getToken());
+			var max = Number(tokenizer.getToken());			
 			this.rotylimit.setMinMax(min, max);
             console.log(this.rotylimit); 
 		}
 		if (tok == "rotzlimit") {
             this.rotzlimit = new DOF(); 
-			var min = tokenizer.getToken(); 
-			var max = tokenizer.getToken(); 
+			var min = Number(tokenizer.getToken()); 
+			var max = Number(tokenizer.getToken()); 
 			this.rotzlimit.setMinMax(min, max);
             console.log(this.rotzlimit); 
 		}		
 		if (tok == "pose") {            
             this.pose = new THREE.Vector3(); 
-			this.pose.setX(tokenizer.getToken()); 
-            this.pose.setY(tokenizer.getToken()); 
-            this.pose.setZ(tokenizer.getToken()); 
+			this.pose.setX(Number(tokenizer.getToken())); 
+            this.pose.setY(Number(tokenizer.getToken())); 
+            this.pose.setZ(Number(tokenizer.getToken())); 
             console.log(this.pose); 
 		}
 		if (tok == "balljoint") {
@@ -99,18 +99,22 @@ Joint.prototype.addChild = function(child){
 }
 
 Joint.prototype.computeLocalMatrix = function(){
-        var trans = new THREE.Matrix4();           
-        //this.localMatrix.setPosition(this.offset);
-        trans.setPosition(this.offset);
-        trans.multiplyMatrices(trans, this.doPose()); 
-        return trans;
+        var trans = new THREE.Matrix4();   
+        var local = new THREE.Matrix4();         
+        trans.setPosition(this.offset);         
+        var matrix = new THREE.Matrix4();        
+        trans.multiply(matrix);
+        //local.multiplyMatrices(trans, this.doPose());
+        return trans;   
 } 
 
 Joint.prototype.computeWorldMatrix = function(parentMtx){
     this.localMatrix = this.computeLocalMatrix(); 
-    var newWorldMatrix = new THREE.Matrix4();    
-    newWorldMatrix.multiplyMatrices(parentMtx, this.localMatrix);     
-    this.worldMatrix = newWorldMatrix;
+    this.worldMatrix = new THREE.Matrix4();       
+    this.worldMatrix.multiplyMatrices(parentMtx, this.localMatrix);
+    console.log(this.name, this.children);
+    //this.worldMatrix.multiplyMatrices(this.localMatrix, parentMtx);      
+    //this.worldMatrix = newWorldMatrix;
     for(var i = 0; i < this.children.length; i++){
         this.children[i].computeWorldMatrix(this.worldMatrix);        
     }
@@ -169,17 +173,27 @@ Joint.prototype.update = function(scene) {
 } */
 
 //need to update the scene every frame instead? after placing it......
-Joint.prototype.drawWireBox = function(xmin, ymin, zmin, xmax, ymax, zmax, scene){
-    console.log("drawing...",this.name);
-    var geometry = new THREE.BoxGeometry( xmax-xmin,ymax-ymin,zmax-zmin);
+//problem is that it's not drawing it the correc way
+Joint.prototype.drawWireBox = function(xmin, ymin, zmin, xmax, ymax, zmax, scene){    
+    var geometry = new THREE.BoxGeometry(xmax-xmin,ymax-ymin,zmax-zmin);
     var material = new THREE.MeshBasicMaterial( { color: '0x00ff00', wireframe:true});
     var mesh = new THREE.Mesh( geometry, material );
     this.mesh = mesh; 
     
-    mesh.matrixAutoUpdate = false;
-    mesh.applyMatrix(this.worldMatrix);
-    mesh.updateMatrix();
-    
+    //mesh.matrixAutoUpdate = false;
+    //glTranslatef(0.5f*(xmin+xmax),0.5f*(ymin+ymax),0.5f*(zmin+zmax));    
+    //var drawTranslate = new THREE.Vector3(
+    /*
+    mesh.translateX(0.5*(xmin+xmax));
+    mesh.translateY(0.5*(ymin+ymax));
+    mesh.translateZ(0.5*(zmin+zmax));
+    */ 
+    var matrix = new THREE.Matrix4();
+    matrix.makeTranslation(0.5*(xmin+xmax), 0.5*(ymin+ymax), 0.5*(zmin+zmax));    
+    this.worldMatrix.multiply(matrix);    
+    mesh.applyMatrix(this.worldMatrix);    
+
+    mesh.updateMatrix();    
     scene.add( mesh );    
 }
 
@@ -189,6 +203,6 @@ Joint.prototype.printChildren = function(){
     for(var i = 0; i< this.children.length; i++){
         console.log(this.children[i]); 
         this.children[i].printChildren(); 
-    }    
+    }
     return;
 }

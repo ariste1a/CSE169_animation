@@ -17,8 +17,8 @@ Skeleton.prototype.load = function() {
     this.root.name = this.tokenizer.getToken(); 
     this.root.load(this.tokenizer);
     console.log("finished loading: ", this.tokenizer.tokens);
-//    console.log(this.root.name);                                                                         
-    this.root.printChildren(); 
+    //console.log(this.root.name);                                                                         
+    //this.root.printChildren(); 
     this.update();
     this.draw(this.scene);  //need to call init when loading is done. using a callback?        
 } 
