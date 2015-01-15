@@ -1,9 +1,10 @@
 <html>
 	<head>
-		<title>My first Three.js app</title>
+		<title>CSE169</title>
 		<style>
 			body { margin: 0; }
 			canvas { width: 100%; height: 100% }
+            <!-- put gui shit here and hook them up to sliders and shit --> 
 		</style>
 	</head>
 	<body>
@@ -17,7 +18,11 @@
         <script src="js/Skeleton.js"></script> 
         <script src="js/OrbitControls.js"></script>
 		<script>
-			// Our Javascript will go here.            
+			// Our Javascript will go here.          
+            function datCallback(){ 
+                console.log("finished");
+                //question now is how to pose each one selecively? return an array of all nodes and hold reference to all of them?
+            } 
             var scene = new THREE.Scene();
             var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
@@ -30,12 +35,14 @@
             camera.position.z = 5;            
             var skel = new Skeleton();                            
             skel.setScene(scene);      
+            skel.setSuccessCallback(datCallback)
             renderer.setClearColorHex(0x0,1);
             var light = new THREE.DirectionalLight(0xffffff, 1);
             light.position.set(10, 10, 10);
             scene.add(light);
             controls = new THREE.OrbitControls(camera, renderer.domElement);            
-            document.getElementById('files').addEventListener('change', skel.open, false);            
+            document.getElementById('files').addEventListener('change', skel.open, false);    
+            //pass the skel object a callback function to execute when it's done?
             function render() {            
                 requestAnimationFrame( render );
                 //cube.rotation.x += 0.1;
@@ -44,6 +51,25 @@
             }
             //  scene.add( cube );
             render();
+            /*
+            var init = function() {
+              camera = new THREE.OrthographicCamera( SCREEN_WIDTH / - 2, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_HEIGHT / - 2, NEAR, FAR);
+              document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+            }
+
+            function onDocumentMouseDown( e ) {
+              e.preventDefault();
+              var mouseVector = new THREE.Vector3();
+              mouseVector.x = 2 * (e.clientX / SCREEN_WIDTH) - 1;
+              mouseVector.y = 1 - 2 * ( e.clientY / SCREEN_HEIGHT );
+              var raycaster = projector.pickingRay( mouseVector.clone(), camera );
+              var intersects = raycaster.intersectObject( TARGET );
+              for( var i = 0; i < intersects.length; i++ ) {
+                var intersection = intersects[ i ],
+                obj = intersection.object;
+                console.log("Intersected object", obj);
+              }
+            }*/ 
 		</script>        
         <div id="stuff"> </div>
 	</body>

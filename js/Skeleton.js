@@ -10,6 +10,9 @@ var Skeleton = function() {
 Skeleton.prototype.local = new THREE.Matrix4(); 
 Skeleton.prototype.tokenizer = new Tokenizer(); 
 Skeleton.prototype.root = new Joint(); 
+Skeleton.prototype.finish = function(){};
+Skeleton.prototype.joints = [];
+
 Skeleton.prototype.load = function() {            
     this.root = new Joint();
     this.tokenizer.findToken("balljoint");
@@ -18,9 +21,10 @@ Skeleton.prototype.load = function() {
     this.root.load(this.tokenizer);
     console.log("finished loading: ", this.tokenizer.tokens);
     //console.log(this.root.name);                                                                         
-    //this.root.printChildren(); 
+    this.root.printChildren(this.joints); 
     this.update();
-    this.draw(this.scene);  //need to call init when loading is done. using a callback?        
+    this.draw(this.scene);  //need to call init when loading is done. using a callback?         
+    this.finish();
 } 
 
 Skeleton.prototype.update = function() {
@@ -58,3 +62,8 @@ Skeleton.prototype.setScene = function (scene) {
     Skeleton.prototype.scene = scene;
     console.log("setting scene ", scene);
 } 
+
+Skeleton.prototype.setSuccessCallback = function (callback) {       
+    this.finish = callback;
+    Skeleton.prototype.finish = callback; //not the right thing but w/e    
+}

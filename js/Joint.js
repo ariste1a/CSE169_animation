@@ -193,7 +193,7 @@ Joint.prototype.drawWireBox = function(xmin, ymin, zmin, xmax, ymax, zmax, scene
     var matrix = new THREE.Matrix4();
     matrix.makeTranslation(0.5*(xmin+xmax), 0.5*(ymin+ymax), 0.5*(zmin+zmax));    
     this.worldMatrix.multiply(matrix);    
-    mesh.applyMatrix(this.worldMatrix);    
+    mesh.applyMatrix(this.worldMatrix);
 
     mesh.updateMatrix();    
     scene.add( mesh );    
@@ -201,10 +201,11 @@ Joint.prototype.drawWireBox = function(xmin, ymin, zmin, xmax, ymax, zmax, scene
 
 
 //is the first object the root?
-Joint.prototype.printChildren = function(){
+Joint.prototype.printChildren = function(array){
     for(var i = 0; i< this.children.length; i++){
         console.log(this.children[i]); 
-        this.children[i].printChildren(); 
+        array.push(this.children[i]); 
+        this.children[i].printChildren(array); 
     }
     return;
 }
