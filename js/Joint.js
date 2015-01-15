@@ -1,5 +1,25 @@
 //rename this to me; 
-var Joint = function(){}
+var Joint = function(){
+
+}
+/*
+Joint.prototype.localMatrix = new THREE.Matrix4(); 
+Joint.prototype.worldMatrix = new THREE.Matrix4(); 
+Joint.prototype.parent = 0; 
+Joint.prototype.offset = new THREE.Vector3(); 
+Joint.prototype.boxmin = new THREE.Vector3(); 
+Joint.prototype.boxmax = new THREE.Vector3(); 
+Joint.prototype.rotxlimit = new DOF(); 
+Joint.prototype.rotylimit = new DOF(); 
+Joint.prototype.rotzlimit = new DOF(); 
+Joint.prototype.pose = new THREE.Vector3();
+Joint.prototype.children = []; */ 
+
+Joint.prototype.rotxlimit = new DOF(); 
+Joint.prototype.rotylimit = new DOF(); 
+Joint.prototype.rotzlimit = new DOF(); 
+Joint.prototype.pose = new THREE.Vector3(); 
+
 Joint.prototype.load = function(tokenizer){    
     var name = tokenizer.getToken();    
     this.name = name; 
@@ -82,6 +102,7 @@ Joint.prototype.computeLocalMatrix = function(){
         var trans = new THREE.Matrix4();           
         //this.localMatrix.setPosition(this.offset);
         trans.setPosition(this.offset);
+        trans.multiplyMatrices(trans, this.doPose()); 
         return trans;
 } 
 
@@ -124,7 +145,7 @@ Joint.prototype.doPose = function(){
 	{
 		this.pose.z = this.rotzlimit.getMin();
 	}
-    var euler = new THEE.Euler(this.pose.x, this.pose.y, this.pose.z, 'XYZ');
+    var euler = new THREE.Euler(this.pose.x, this.pose.y, this.pose.z, 'ZXY');
     rot.makeRotationFromEuler(euler); 
     return rot; 
 }
